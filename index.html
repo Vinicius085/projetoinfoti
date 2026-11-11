@@ -1,0 +1,822 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="Nove ebooks gratuitos sobre Sistemas de Informação e um alerta sobre golpes com IA, feitos por alunos para a comunidade.">
+<style>:root{color-scheme:light}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>Biblioteca SI</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500..800&family=Figtree:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: capa de projeto comunitário (painel escuro com livros em leque), alerta de golpes em destaque, estante de 4 colunas, créditos dos autores. */
+:root{
+  --bg:#F6F4FC; --surface:#FFFFFF; --fg:#1B1740; --muted:#5A5580; --line:#E4DFF4;
+  --accent:#D6335A; --accent-fg:#FFFFFF; --ink:#1B1740; --ink-fg:#F6F3FF;
+  --coral:#FF5C7C; --sun:#FFC83D; --mint:#2FC7A0;
+  --tip-bg:#FFF3C9; --tip-fg:#4A3A00; --code-bg:#EFEBFB;
+  --alert-bg:#FFE9EE; --alert-fg:#8E1236;
+  --font-display:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
+  --font-body:"Figtree","Segoe UI",system-ui,sans-serif;
+  --font-mono:"JetBrains Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#13102B; --surface:#1E1A42; --fg:#F1EEFF; --muted:#B3AED8; --line:#332E66;
+    --accent:#FF7B9C; --accent-fg:#1A0A12; --ink:#241F55; --ink-fg:#F6F3FF;
+    --tip-bg:#3A3112; --tip-fg:#FFE9A6; --code-bg:#171340;
+    --alert-bg:#3A1426; --alert-fg:#FFB3C6; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#13102B; --surface:#1E1A42; --fg:#F1EEFF; --muted:#B3AED8; --line:#332E66;
+  --accent:#FF7B9C; --accent-fg:#1A0A12; --ink:#241F55; --ink-fg:#F6F3FF;
+  --tip-bg:#3A3112; --tip-fg:#FFE9A6; --code-bg:#171340;
+  --alert-bg:#3A1426; --alert-fg:#FFB3C6; color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg); color:var(--fg); font-family:var(--font-body); font-size:17px; line-height:1.65;
+  padding-block:0 56px;
+  padding-left:max(16px, env(safe-area-inset-left,0px));
+  padding-right:max(16px, env(safe-area-inset-right,0px));
+}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--bg);z-index:30}
+.wrap{max-width:1080px;margin:0 auto}
+a{color:var(--accent);font-weight:600}
+:focus-visible{outline:3px solid var(--accent);outline-offset:3px;border-radius:6px}
+button{font:inherit;color:inherit;cursor:pointer}
+svg{display:block}
+h1,h2{font-family:var(--font-display);text-wrap:balance}
+.eyebrow{font-size:13px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);margin:0}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--surface);border:1.5px solid var(--line);border-radius:999px;padding:11px 22px;font-size:15.5px;font-weight:700;transition:transform .15s, border-color .15s}
+.btn:hover{border-color:var(--accent);transform:translateY(-1px)}
+.btn.primary{background:var(--accent);color:var(--accent-fg);border-color:var(--accent)}
+.btn.ghost{background:transparent;color:var(--ink-fg);border-color:rgba(255,255,255,.4)}
+.btn.ghost:hover{border-color:#fff}
+
+/* Capa */
+.hero{position:relative;overflow:hidden;margin-top:20px;background:var(--ink);color:var(--ink-fg);border-radius:30px;
+  padding:clamp(26px,5vw,56px);display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,.7fr);gap:24px;align-items:center}
+.blob{position:absolute;border-radius:50%;pointer-events:none}
+.b1{width:300px;height:300px;background:var(--coral);right:-90px;top:-120px}
+.b2{width:150px;height:150px;background:var(--sun);right:26%;bottom:-70px}
+.b3{width:70px;height:70px;background:var(--mint);right:12%;top:44%}
+.hero-text{position:relative;z-index:1;display:grid;gap:18px;justify-items:start}
+.hero .eyebrow{color:var(--sun)}
+.hero h1{font-weight:800;font-size:clamp(36px,6.4vw,66px);line-height:1.02;margin:0;letter-spacing:-.025em;color:#fff}
+.hero h1 mark{color:inherit;background:linear-gradient(transparent 64%,var(--coral) 64%);padding:0 .06em}
+.hero .lead{margin:0;max-width:52ch;font-size:clamp(17px,2.2vw,19.5px);color:#E4DEFA}
+.cta{display:flex;flex-wrap:wrap;gap:12px;margin-top:4px}
+.by{display:flex;align-items:center;gap:12px;font-size:14.5px;color:#D5CEF2;margin-top:6px}
+.avs{display:flex}
+.avs i{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-style:normal;font-family:var(--font-display);font-weight:700;font-size:12.5px;color:#1B1740;background:var(--c);border:2.5px solid var(--ink);margin-left:-8px}
+.avs i:first-child{margin-left:0}
+.art{position:relative;z-index:1;height:290px;min-width:0}
+.mini{position:absolute;width:122px;aspect-ratio:3/4;border-radius:6px 14px 14px 6px;display:grid;place-items:center;color:#fff;
+  background:linear-gradient(160deg,hsl(var(--h) 72% 50%),hsl(var(--h) 66% 30%));box-shadow:inset 6px 0 0 rgba(255,255,255,.16),0 18px 30px -12px rgba(0,0,0,.55)}
+.mini svg{width:50px;height:50px}
+.m1{left:0;top:52px;transform:rotate(-10deg)}
+.m2{left:98px;top:6px;transform:rotate(2deg);z-index:2;width:132px}
+.m3{left:212px;top:60px;transform:rotate(11deg)}
+
+/* Alerta */
+.alert{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:22px;align-items:center;width:100%;text-align:left;background:var(--alert-bg);
+  border:2px solid var(--coral);border-radius:22px;padding:22px 26px;margin-top:22px;transition:transform .15s}
+.alert:hover{transform:translateY(-2px)}
+.al-ic{width:68px;height:68px;border-radius:50%;background:var(--coral);color:#fff;display:grid;place-items:center}
+.al-ic svg{width:36px;height:36px}
+.al-tag{display:block;font-size:12.5px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--alert-fg)}
+.al-t{display:block;font-family:var(--font-display);font-weight:800;font-size:clamp(22px,3vw,28px);line-height:1.15;margin:2px 0 4px;color:var(--fg)}
+.al-s{display:block;color:var(--muted);font-size:16px;line-height:1.5}
+
+/* Estante */
+.sec{font-size:clamp(26px,4vw,36px);font-weight:800;margin:52px 0 6px;letter-spacing:-.015em}
+.sec-sub{margin:0 0 22px;color:var(--muted);max-width:60ch}
+.shelf{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+.card{display:flex;flex-direction:column;padding:0;overflow:hidden;background:var(--surface);border:1px solid var(--line);border-radius:18px;text-align:left;width:100%;height:100%;
+  transition:transform .18s, box-shadow .18s, border-color .18s}
+.card:hover{transform:translateY(-4px);box-shadow:0 18px 32px -18px rgba(27,23,64,.45);border-color:var(--accent)}
+.cv{position:relative;overflow:hidden;aspect-ratio:16/10;display:grid;place-items:center;color:#fff;
+  background:linear-gradient(150deg,hsl(var(--h) 72% 50%),hsl(var(--h) 66% 30%))}
+.cv::before{content:"";position:absolute;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.14);right:-30px;top:-40px}
+.cv::after{content:"";position:absolute;width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,.1);left:-18px;bottom:-26px}
+.cv svg{position:relative;z-index:1;width:60px;height:60px}
+.cv em{position:absolute;z-index:1;left:12px;top:11px;font-style:normal;font-size:11.5px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;background:rgba(255,255,255,.22);padding:3px 10px;border-radius:999px}
+.cb{display:flex;flex-direction:column;gap:8px;padding:16px 18px 18px;flex:1}
+.ct{font-family:var(--font-display);font-weight:700;font-size:19.5px;line-height:1.2;text-wrap:balance}
+.cs{color:var(--muted);font-size:15px;line-height:1.5}
+.cm{margin-top:auto;padding-top:8px;display:flex;justify-content:space-between;gap:8px;font-size:14px;color:var(--muted)}
+.arr{color:var(--accent);font-weight:800}
+
+/* Quem fez */
+.about{margin-top:56px;background:var(--surface);border:1px solid var(--line);border-radius:26px;padding:clamp(22px,4vw,44px);display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,.9fr);gap:30px;align-items:center}
+.about h2{font-size:clamp(26px,4vw,38px);font-weight:800;line-height:1.1;margin:8px 0 14px;letter-spacing:-.015em}
+.about p{margin:0 0 12px;color:var(--muted)}
+.people{display:grid;gap:12px}
+.person{display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:18px;background:var(--bg)}
+.av{flex:none;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-family:var(--font-display);font-weight:800;font-size:17px;color:#1B1740;background:var(--c)}
+.pn{min-width:0;display:grid;line-height:1.3}
+.pn strong{font-family:var(--font-display);font-size:18px}
+.pn span{color:var(--muted);font-size:14.5px}
+.foot{margin-top:36px;display:flex;flex-wrap:wrap;gap:14px 24px;justify-content:space-between;align-items:center;font-size:14.5px;color:var(--muted)}
+.foot p{margin:0;max-width:62ch}
+
+/* Leitor */
+.bar{position:fixed;left:0;right:0;top:env(safe-area-inset-top,0px);height:4px;z-index:31}
+.bar i{display:block;height:100%;width:0;background:var(--coral);border-radius:0 4px 4px 0}
+.rhead{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-block:18px 14px}
+.back{background:none;border:0;padding:6px 0;font-weight:700;color:var(--accent);font-size:16px}
+.rhero{position:relative;overflow:hidden;color:#fff;border-radius:28px;padding:clamp(24px,4.5vw,48px);
+  background:linear-gradient(150deg,hsl(var(--h) 72% 46%),hsl(var(--h) 66% 27%));display:grid;grid-template-columns:minmax(0,1fr) auto;gap:20px;align-items:center}
+.rhero::before{content:"";position:absolute;width:280px;height:280px;border-radius:50%;background:rgba(255,255,255,.1);right:-70px;top:-100px}
+.rhero::after{content:"";position:absolute;width:120px;height:120px;border-radius:50%;background:rgba(255,255,255,.08);right:20%;bottom:-60px}
+.rh-text{position:relative;z-index:1;display:grid;gap:12px;justify-items:start}
+.rhero .eyebrow{color:rgba(255,255,255,.8)}
+.rhero h1{margin:0;font-weight:800;font-size:clamp(32px,5.6vw,54px);line-height:1.05;letter-spacing:-.02em}
+.rhero .lead{margin:0;max-width:54ch;font-size:18.5px;color:rgba(255,255,255,.92)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:rgba(255,255,255,.2);padding:4px 13px;border-radius:999px;font-size:14px;font-weight:700}
+.who{margin:2px 0 0;font-size:15.5px;color:rgba(255,255,255,.95)}
+.rh-ic{position:relative;z-index:1;width:112px;height:112px;border-radius:30px;background:rgba(255,255,255,.16);display:grid;place-items:center}
+.rh-ic svg{width:60px;height:60px}
+.reader{display:grid;grid-template-columns:250px minmax(0,1fr);gap:52px;padding-top:34px;align-items:start}
+.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 18px);font-size:15px}
+.toc summary{font-size:13px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);cursor:pointer;padding:4px 0 10px}
+.toc ol{list-style:none;margin:0;padding:0;display:grid;gap:2px}
+.toc button{background:none;border:0;border-left:3px solid var(--line);text-align:left;width:100%;padding:7px 0 7px 14px;color:var(--muted);line-height:1.35}
+.toc button:hover{color:var(--fg)}
+.toc button[aria-current="true"]{border-left-color:var(--accent);color:var(--fg);font-weight:700}
+.text{max-width:68ch;min-width:0;font-size:18px;line-height:1.75}
+.text section{padding-bottom:10px;scroll-margin-top:calc(env(safe-area-inset-top,0px) + 20px)}
+.capn{font-size:13px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:var(--accent);margin:40px 0 2px}
+.text section:first-child .capn{margin-top:0}
+.text h2{font-weight:800;font-size:clamp(25px,3.6vw,31px);line-height:1.15;margin:0 0 14px;letter-spacing:-.01em}
+.text p{margin:0 0 16px}
+.text ul,.text ol{margin:0 0 18px;padding-left:24px}
+.text li{margin-bottom:9px}
+.text li::marker{color:var(--accent);font-weight:700}
+.text code{font-family:var(--font-mono);font-size:.86em;background:var(--code-bg);padding:2px 7px;border-radius:6px}
+.text pre{background:var(--code-bg);border-radius:14px;padding:16px 18px;overflow-x:auto;margin:0 0 18px;font-size:14px;line-height:1.6}
+.text pre code{background:none;padding:0}
+.tip{background:var(--tip-bg);color:var(--tip-fg);border-radius:16px;padding:16px 20px;margin:0 0 20px;font-size:16.5px;line-height:1.6}
+.tip b{display:block;font-size:12.5px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;margin-bottom:3px}
+.pager{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:40px}
+.pager button{background:var(--surface);border:1.5px solid var(--line);border-radius:16px;padding:16px 18px;text-align:left;font-family:var(--font-display);font-weight:700;font-size:17px;line-height:1.25}
+.pager button:hover{border-color:var(--accent)}
+.pager small{display:block;font-family:var(--font-body);font-size:12.5px;font-weight:700;color:var(--accent);letter-spacing:.08em;text-transform:uppercase;margin-bottom:3px}
+.pager button:last-child{text-align:right}
+.pager .none{visibility:hidden}
+.credit{margin-top:26px;padding:16px 20px;border-radius:16px;background:var(--surface);border:1px solid var(--line);font-size:15px;line-height:1.55;color:var(--muted)}
+.credit b{color:var(--fg)}
+
+@media (max-width:1000px){ .shelf{grid-template-columns:repeat(2,minmax(0,1fr))} }
+@media (max-width:860px){
+  .hero{grid-template-columns:minmax(0,1fr)}
+  .art{display:none}
+  .reader{grid-template-columns:minmax(0,1fr);gap:22px}
+  .toc{position:static;border:1px solid var(--line);border-radius:16px;padding:6px 16px;background:var(--surface)}
+  .about{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:700px){
+  .alert{grid-template-columns:auto minmax(0,1fr);gap:16px;padding:18px}
+  .alert .btn{grid-column:1/-1;justify-self:start}
+  .al-ic{width:54px;height:54px}.al-ic svg{width:28px;height:28px}
+  .rhero{grid-template-columns:minmax(0,1fr)}
+  .rh-ic{display:none}
+  .text{font-size:17.5px}
+}
+@media (max-width:560px){
+  .shelf{grid-template-columns:minmax(0,1fr)}
+  .hero{border-radius:24px}
+  .pager{grid-template-columns:minmax(0,1fr)}
+  .pager button:last-child{text-align:left}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.card,.alert,.btn{transition:none}.card:hover,.alert:hover,.btn:hover{transform:none}}
+</style>
+
+</head>
+<body>
+<div class="bar" aria-hidden="true"><i id="prog"></i></div>
+<div class="wrap" id="app"></div>
+
+<script>
+var BOOKS = [
+{ id:"livro-1", h:215, mark:"SI", title:"Introdução aos Sistemas de Informação", sub:"O que são, como funcionam e por que toda organização depende deles.",
+chapters:[
+{t:"O que é um sistema de informação", h:`
+<p>Um sistema de informação (SI) é um conjunto organizado de pessoas, processos, dados e tecnologia que coleta, processa, armazena e distribui informação para apoiar o funcionamento e as decisões de uma organização.</p>
+<p>Três palavras aparecem o tempo todo e têm significados diferentes:</p>
+<ul>
+<li><strong>Dado:</strong> um registro bruto, sem contexto. Exemplo: o código de barras de um produto lido no caixa.</li>
+<li><strong>Informação:</strong> o dado organizado e com significado. Exemplo: o relatório com as vendas da semana por produto.</li>
+<li><strong>Conhecimento:</strong> a informação aplicada a uma decisão. Exemplo: a gerente percebe que um item encalhou e muda o preço.</li>
+</ul>
+<p>Um sistema de informação existe para transformar o primeiro item no terceiro com rapidez e confiabilidade.</p>`},
+{t:"Componentes de um SI", h:`
+<p>Todo sistema de informação reúne cinco elementos:</p>
+<ul>
+<li><strong>Hardware:</strong> computadores, servidores, celulares, impressoras, leitores.</li>
+<li><strong>Software:</strong> sistemas operacionais, aplicativos, sistemas de gestão.</li>
+<li><strong>Dados:</strong> o que é registrado e consultado.</li>
+<li><strong>Redes:</strong> a infraestrutura que conecta tudo, local ou pela internet.</li>
+<li><strong>Pessoas e processos:</strong> quem usa o sistema e as regras de como o trabalho acontece.</li>
+</ul>
+<div class="tip"><b>Ponto de atenção</b>Muitos projetos falham não por causa da tecnologia, mas porque as pessoas não foram treinadas ou o processo não foi bem entendido antes de programar.</div>`},
+{t:"Tipos de sistemas", h:`
+<p>Cada nível da empresa usa um tipo de sistema diferente:</p>
+<ul>
+<li><strong>TPS (processamento de transações):</strong> registra o dia a dia, como vendas, pagamentos e pedidos.</li>
+<li><strong>SIG (sistema de informação gerencial):</strong> resume os dados operacionais em relatórios para gerentes.</li>
+<li><strong>SAD (apoio à decisão):</strong> permite simular cenários e comparar alternativas.</li>
+<li><strong>ERP:</strong> integra áreas como financeiro, estoque, compras e recursos humanos em uma só base.</li>
+<li><strong>CRM:</strong> organiza o relacionamento com clientes e o histórico de atendimento.</li>
+</ul>`},
+{t:"SI e TI: qual a diferença", h:`
+<p>Tecnologia da Informação (TI) é o conjunto de recursos técnicos: equipamentos, programas, redes e as equipes que os mantêm. Sistemas de Informação é a área que une essa tecnologia ao negócio.</p>
+<p>O profissional de SI precisa entender de tecnologia, mas também de processos, pessoas e resultados. Por isso o curso mistura programação, banco de dados e redes com gestão, administração e análise de requisitos.</p>`},
+{t:"Tendências", h:`
+<p>Algumas mudanças estão redesenhando os sistemas de informação:</p>
+<ul>
+<li><strong>Computação em nuvem:</strong> usar servidores e programas pela internet, pagando pelo uso.</li>
+<li><strong>Análise de dados:</strong> transformar grandes volumes de registros em indicadores e previsões.</li>
+<li><strong>Inteligência artificial:</strong> automatizar tarefas como atendimento e classificação de documentos.</li>
+<li><strong>Mobilidade:</strong> sistemas pensados primeiro para o celular.</li>
+<li><strong>Proteção de dados:</strong> leis como a LGPD obrigam as organizações a tratar dados pessoais com responsabilidade.</li>
+</ul>`}
+]},
+
+{ id:"livro-2", h:165, mark:"SQL", title:"Banco de Dados e SQL", sub:"Como guardar dados com organização e consultá-los com a linguagem SQL.",
+chapters:[
+{t:"Por que usar um banco de dados", h:`
+<p>Planilhas funcionam bem para listas pequenas. Quando muita gente precisa acessar os mesmos dados ao mesmo tempo, com regras e segurança, é preciso um banco de dados.</p>
+<p>Um Sistema Gerenciador de Banco de Dados (SGBD), como MySQL, PostgreSQL ou SQL Server, oferece:</p>
+<ul>
+<li>acesso simultâneo de vários usuários;</li>
+<li>regras que impedem dados inconsistentes;</li>
+<li>consultas rápidas, mesmo com milhões de registros;</li>
+<li>controle de quem pode ver ou alterar cada informação;</li>
+<li>cópias de segurança e recuperação.</li>
+</ul>`},
+{t:"O modelo relacional", h:`
+<p>No modelo relacional, os dados ficam em <strong>tabelas</strong>. Cada linha é um registro e cada coluna é um atributo.</p>
+<ul>
+<li><strong>Chave primária (PK):</strong> identifica cada linha de forma única, como o <code>id</code> do cliente.</li>
+<li><strong>Chave estrangeira (FK):</strong> aponta para a chave primária de outra tabela e cria o relacionamento. Em <code>pedidos</code>, a coluna <code>cliente_id</code> liga cada pedido ao seu cliente.</li>
+</ul>
+<p>Os relacionamentos podem ser um para um, um para muitos (um cliente tem vários pedidos) ou muitos para muitos (pedidos e produtos, resolvidos com uma tabela intermediária).</p>`},
+{t:"Modelagem e normalização", h:`
+<p>Antes de criar tabelas, desenha-se o modelo. O <strong>MER</strong> (Modelo Entidade-Relacionamento) mostra as entidades, seus atributos e como se relacionam.</p>
+<p>A <strong>normalização</strong> reduz repetição e erros:</p>
+<ul>
+<li><strong>1ª forma normal:</strong> cada campo guarda um único valor, sem listas dentro de uma célula.</li>
+<li><strong>2ª forma normal:</strong> cada atributo depende da chave inteira.</li>
+<li><strong>3ª forma normal:</strong> atributos não dependem de outros atributos que não sejam a chave.</li>
+</ul>
+<p>Exemplo: em vez de repetir o nome e o endereço do cliente em todo pedido, guarda-se o cliente uma vez e o pedido apenas referencia o seu id.</p>`},
+{t:"SQL básico", h:`
+<p>SQL (Structured Query Language) é a linguagem padrão para conversar com bancos relacionais. Os quatro comandos centrais:</p>
+<pre><code>-- inserir
+INSERT INTO clientes (nome, cidade) VALUES ('Ana', 'São Paulo');
+
+-- consultar
+SELECT nome, cidade FROM clientes WHERE cidade = 'São Paulo';
+
+-- atualizar
+UPDATE clientes SET cidade = 'Campinas' WHERE id = 1;
+
+-- remover
+DELETE FROM clientes WHERE id = 1;</code></pre>
+<div class="tip"><b>Cuidado</b>UPDATE e DELETE sem WHERE afetam a tabela inteira. Escreva primeiro o SELECT com a mesma condição para conferir o que será alterado.</div>`},
+{t:"JOIN e agregações", h:`
+<p>O <code>JOIN</code> combina tabelas relacionadas. As funções de agregação (<code>COUNT</code>, <code>SUM</code>, <code>AVG</code>, <code>MIN</code>, <code>MAX</code>) resumem os dados. Juntos respondem perguntas de negócio:</p>
+<pre><code>SELECT c.nome, COUNT(p.id) AS total_pedidos
+FROM clientes c
+JOIN pedidos p ON p.cliente_id = c.id
+GROUP BY c.nome
+ORDER BY total_pedidos DESC;</code></pre>
+<p>Essa consulta lista os clientes do que mais comprou ao que menos comprou.</p>`},
+{t:"Boas práticas", h:`
+<ul>
+<li>Faça backup regularmente e teste a restauração.</li>
+<li>Crie índices nas colunas muito consultadas, sem exagerar.</li>
+<li>Dê a cada usuário apenas as permissões de que precisa.</li>
+<li>Nunca monte comandos SQL concatenando texto digitado pelo usuário. Use consultas parametrizadas para evitar a injeção de SQL.</li>
+<li>Guarde somente os dados pessoais necessários, em respeito à LGPD.</li>
+</ul>`}
+]},
+
+{ id:"livro-3", h:265, mark:"SW", title:"Engenharia de Software", sub:"Do levantamento de requisitos à manutenção: como se constrói software de qualidade.",
+chapters:[
+{t:"O que é engenharia de software", h:`
+<p>É a disciplina que aplica métodos organizados ao desenvolvimento de programas, com foco em prazo, custo e qualidade. Escrever código é apenas uma parte. Também fazem parte do trabalho entender o problema, planejar, testar, entregar e manter o sistema funcionando.</p>`},
+{t:"Ciclo de vida do software", h:`
+<p>As etapas clássicas são:</p>
+<ol>
+<li><strong>Levantamento de requisitos:</strong> descobrir o que o usuário realmente precisa.</li>
+<li><strong>Análise e projeto:</strong> definir a estrutura, as telas e o banco de dados.</li>
+<li><strong>Implementação:</strong> programar.</li>
+<li><strong>Testes:</strong> verificar se tudo funciona como esperado.</li>
+<li><strong>Implantação:</strong> colocar o sistema em uso.</li>
+<li><strong>Manutenção:</strong> corrigir falhas e adicionar melhorias ao longo dos anos.</li>
+</ol>
+<p>Requisitos funcionais descrevem o que o sistema faz ("emitir nota fiscal"). Requisitos não funcionais descrevem como ele deve se comportar ("responder em menos de 2 segundos").</p>`},
+{t:"Cascata e métodos ágeis", h:`
+<p>No modelo <strong>cascata</strong>, cada etapa termina antes da próxima começar. Funciona quando os requisitos são estáveis, mas é caro quando algo muda no meio do caminho.</p>
+<p>Os <strong>métodos ágeis</strong> entregam o sistema em partes pequenas e frequentes, recebendo feedback do cliente a cada ciclo. Valorizam pessoas, software funcionando, colaboração com o cliente e capacidade de se adaptar a mudanças.</p>`},
+{t:"Scrum em poucas linhas", h:`
+<ul>
+<li><strong>Product Owner:</strong> representa o cliente e prioriza o que será feito.</li>
+<li><strong>Scrum Master:</strong> ajuda a equipe a seguir o método e remove obstáculos.</li>
+<li><strong>Time de desenvolvimento:</strong> constrói o produto.</li>
+<li><strong>Sprint:</strong> ciclo curto, em geral de uma a quatro semanas, que termina com uma entrega.</li>
+<li><strong>Backlog:</strong> a lista priorizada de tudo que precisa ser feito.</li>
+<li><strong>Reuniões:</strong> planejamento, diária, revisão e retrospectiva.</li>
+</ul>`},
+{t:"UML: desenhando o sistema", h:`
+<p>A UML é uma linguagem visual para documentar sistemas. Os diagramas mais usados:</p>
+<ul>
+<li><strong>Casos de uso:</strong> quem usa o sistema (atores) e o que consegue fazer.</li>
+<li><strong>Classes:</strong> as classes do programa, seus atributos, métodos e relações.</li>
+<li><strong>Sequência:</strong> a ordem das mensagens trocadas entre objetos ou componentes.</li>
+<li><strong>Atividades:</strong> o fluxo de um processo, com decisões e etapas paralelas.</li>
+</ul>`},
+{t:"Testes e versionamento", h:`
+<p>Testes automatizados verificam o código toda vez que ele muda. Os níveis comuns são o teste de unidade (uma função), de integração (módulos juntos) e de aceitação (o usuário valida).</p>
+<p>O <strong>Git</strong> registra o histórico de cada alteração, permite que várias pessoas trabalhem no mesmo projeto e deixa voltar a uma versão anterior. O <strong>GitHub</strong> hospeda os repositórios e serve também como portfólio profissional.</p>
+<pre><code>git init
+git add .
+git commit -m "Primeira versão"
+git push origin main</code></pre>`}
+]},
+
+{ id:"livro-4", h:195, mark:"NET", title:"Redes de Computadores e Internet", sub:"Como os dispositivos se comunicam e como um site chega até a sua tela.",
+chapters:[
+{t:"O que é uma rede", h:`
+<p>Uma rede é um conjunto de dispositivos conectados para trocar dados e compartilhar recursos. Por alcance, as mais comuns são:</p>
+<ul>
+<li><strong>LAN:</strong> rede local, como a de uma casa, escola ou escritório.</li>
+<li><strong>MAN:</strong> rede metropolitana, que cobre uma cidade.</li>
+<li><strong>WAN:</strong> rede de longa distância. A internet é a maior WAN do mundo.</li>
+</ul>`},
+{t:"Equipamentos básicos", h:`
+<ul>
+<li><strong>Switch:</strong> conecta os dispositivos de uma mesma rede local.</li>
+<li><strong>Roteador:</strong> liga redes diferentes, como a sua casa à internet, e decide o caminho dos dados.</li>
+<li><strong>Access point:</strong> oferece o sinal Wi-Fi.</li>
+<li><strong>Modem:</strong> converte o sinal do provedor para a rede.</li>
+<li><strong>Cabos e fibra:</strong> o meio físico por onde os dados viajam.</li>
+</ul>
+<p>O roteador doméstico normalmente reúne roteador, switch e access point em uma única caixa.</p>`},
+{t:"Modelos de camadas", h:`
+<p>Para organizar a comunicação, as redes são divididas em camadas, cada uma com uma tarefa. O modelo <strong>TCP/IP</strong>, usado na internet, tem quatro:</p>
+<ol>
+<li><strong>Aplicação:</strong> os protocolos que você usa, como HTTP, HTTPS, e-mail e DNS.</li>
+<li><strong>Transporte:</strong> divide os dados em pedaços e garante a entrega (TCP) ou prioriza velocidade (UDP).</li>
+<li><strong>Internet:</strong> endereça e roteia os pacotes pelo protocolo IP.</li>
+<li><strong>Acesso à rede:</strong> o envio físico por cabo ou Wi-Fi.</li>
+</ol>
+<p>O modelo OSI, de sete camadas, é a referência teórica usada para estudar e diagnosticar problemas.</p>`},
+{t:"IP, DNS e HTTP", h:`
+<ul>
+<li><strong>Endereço IP:</strong> o "endereço" de cada dispositivo na rede. O IPv4 tem quatro números (como 192.168.0.10) e o IPv6 foi criado porque os endereços IPv4 estão acabando.</li>
+<li><strong>DNS:</strong> a "lista telefônica" da internet, que traduz um nome como <code>exemplo.com.br</code> no endereço IP do servidor.</li>
+<li><strong>HTTP e HTTPS:</strong> o protocolo de conversa entre navegador e site. O S indica que a comunicação é criptografada.</li>
+</ul>`},
+{t:"Como um site chega até você", h:`
+<ol>
+<li>Você digita o endereço no navegador.</li>
+<li>O navegador pergunta ao DNS qual é o IP do servidor.</li>
+<li>Ele abre uma conexão com esse servidor e faz um pedido HTTPS.</li>
+<li>O servidor responde com HTML, CSS, JavaScript e imagens.</li>
+<li>O navegador monta a página e exibe na tela.</li>
+</ol>
+<p>Tudo isso costuma levar menos de um segundo.</p>`},
+{t:"Nuvem e redes no dia a dia", h:`
+<p>Na computação em nuvem, servidores ficam em data centers de provedores e são acessados pela internet. A empresa contrata capacidade conforme a necessidade, sem comprar equipamentos próprios.</p>
+<p>Dicas práticas: troque a senha padrão do roteador, use WPA2 ou WPA3 no Wi-Fi, mantenha o firmware atualizado e evite redes públicas abertas para acessar serviços importantes, como o banco.</p>`}
+]},
+
+{ id:"livro-5", h:350, mark:"SEC", title:"Segurança da Informação", sub:"Como proteger dados, contas e sistemas contra os riscos mais comuns.",
+chapters:[
+{t:"Os três pilares", h:`
+<p>A segurança da informação se apoia na chamada tríade CID:</p>
+<ul>
+<li><strong>Confidencialidade:</strong> só quem tem autorização acessa a informação.</li>
+<li><strong>Integridade:</strong> a informação não é alterada de forma indevida.</li>
+<li><strong>Disponibilidade:</strong> a informação está acessível quando é necessária.</li>
+</ul>
+<p>Um ataque ou uma falha sempre prejudica pelo menos um deles. Um ransomware, por exemplo, derruba a disponibilidade. Um vazamento de dados derruba a confidencialidade.</p>`},
+{t:"Ameaças mais comuns", h:`
+<ul>
+<li><strong>Phishing:</strong> mensagem falsa que imita um banco, loja ou órgão público para levar a pessoa a informar senhas ou clicar em links maliciosos.</li>
+<li><strong>Malware:</strong> programas maliciosos, como vírus, trojans e spywares.</li>
+<li><strong>Ransomware:</strong> sequestra os arquivos com criptografia e pede pagamento para devolvê-los.</li>
+<li><strong>Engenharia social:</strong> manipula a pessoa, e não o computador, para obter acesso.</li>
+<li><strong>Ataques de força bruta:</strong> tentam adivinhar senhas em grande escala.</li>
+</ul>`},
+{t:"Senhas e autenticação", h:`
+<ul>
+<li>Use senhas longas. Uma frase de várias palavras é mais forte e mais fácil de lembrar que uma senha curta cheia de símbolos.</li>
+<li>Nunca reutilize a mesma senha em serviços diferentes.</li>
+<li>Use um gerenciador de senhas.</li>
+<li>Ative a <strong>autenticação em dois fatores (2FA)</strong> sempre que possível. Mesmo que a senha vaze, o invasor ainda precisa do segundo fator.</li>
+</ul>`},
+{t:"Backup e recuperação", h:`
+<p>A regra <strong>3-2-1</strong> é simples e eficaz: mantenha <strong>3 cópias</strong> dos dados importantes, em <strong>2 tipos diferentes</strong> de mídia, com <strong>1 cópia fora do local</strong> (ou na nuvem).</p>
+<div class="tip"><b>Teste a restauração</b>Um backup que nunca foi restaurado é só uma esperança. Confira de tempos em tempos se os arquivos realmente voltam.</div>`},
+{t:"Como reconhecer um golpe", h:`
+<ul>
+<li>Urgência exagerada: "sua conta será bloqueada em 1 hora".</li>
+<li>Endereço do remetente ou do link diferente do site oficial.</li>
+<li>Pedido de código recebido por SMS ou aplicativo. Nenhuma empresa séria pede esse código.</li>
+<li>Promessas boas demais para ser verdade.</li>
+</ul>
+<p>Na dúvida, não clique. Abra o site oficial digitando o endereço ou use o aplicativo do serviço. Para ver exemplos e o passo a passo do que fazer, leia o ebook completo <a href="#livro-9">Phishing e Golpes com IA</a>.</p>`},
+{t:"LGPD", h:`
+<p>A Lei Geral de Proteção de Dados (Lei 13.709/2018) define regras para coletar, usar e armazenar dados pessoais no Brasil. Entre seus princípios estão a finalidade (coletar para um propósito claro), a necessidade (coletar o mínimo) e a segurança (proteger contra acessos indevidos).</p>
+<p>O titular tem direitos como saber quais dados a empresa possui, corrigi-los e pedir sua exclusão em certos casos.</p>`}
+]},
+
+{ id:"livro-6", h:35, mark:"OOP", title:"Lógica de Programação e POO com Java", sub:"Os fundamentos para pensar como programador e organizar código em objetos.",
+chapters:[
+{t:"Algoritmos e lógica", h:`
+<p>Um algoritmo é uma sequência finita de passos para resolver um problema. Antes de programar, vale escrever a solução em português simples ou em fluxograma.</p>
+<p>Exemplo: calcular a média de duas notas e dizer se o aluno foi aprovado.</p>
+<ol>
+<li>Ler a nota 1 e a nota 2.</li>
+<li>Calcular a média: (nota 1 + nota 2) / 2.</li>
+<li>Se a média for maior ou igual a 6, mostrar "Aprovado". Senão, mostrar "Reprovado".</li>
+</ol>`},
+{t:"Variáveis e tipos de dados", h:`
+<p>Uma variável é um espaço na memória com um nome e um tipo. Em Java, o tipo é declarado:</p>
+<pre><code>int idade = 20;
+double nota = 8.5;
+boolean aprovado = true;
+String nome = "Marina";</code></pre>
+<p>Os tipos primitivos mais usados são <code>int</code> (inteiros), <code>double</code> (decimais), <code>boolean</code> (verdadeiro ou falso) e <code>char</code> (um caractere). <code>String</code> é uma classe para textos.</p>`},
+{t:"Condições e repetições", h:`
+<pre><code>double media = (nota1 + nota2) / 2;
+
+if (media &gt;= 6) {
+    System.out.println("Aprovado");
+} else {
+    System.out.println("Reprovado");
+}
+
+for (int i = 1; i &lt;= 5; i++) {
+    System.out.println("Contagem: " + i);
+}</code></pre>
+<p>O <code>if</code> decide entre caminhos. O <code>for</code> repete um trecho um número conhecido de vezes, e o <code>while</code> repete enquanto uma condição for verdadeira.</p>`},
+{t:"Métodos", h:`
+<p>Um método é um bloco de código com nome, que pode receber valores e devolver um resultado. Dividir o programa em métodos evita repetição e facilita testar cada parte.</p>
+<pre><code>public static double calcularMedia(double n1, double n2) {
+    return (n1 + n2) / 2;
+}</code></pre>`},
+{t:"Orientação a objetos", h:`
+<p>Na Programação Orientada a Objetos (POO), o programa é um conjunto de objetos que guardam dados (atributos) e sabem fazer coisas (métodos). A <strong>classe</strong> é o molde e o <strong>objeto</strong> é uma instância dele.</p>
+<pre><code>public class ContaBancaria {
+    private double saldo;
+
+    public void depositar(double valor) {
+        if (valor &gt; 0) {
+            saldo += valor;
+        }
+    }
+
+    public double getSaldo() {
+        return saldo;
+    }
+}</code></pre>
+<p>Repare que o atributo <code>saldo</code> é privado e só muda por meio de <code>depositar</code>, que valida o valor.</p>`},
+{t:"Os quatro pilares da POO", h:`
+<ul>
+<li><strong>Encapsulamento:</strong> esconder os detalhes internos e expor apenas o necessário, como no exemplo acima.</li>
+<li><strong>Herança:</strong> uma classe reaproveita atributos e métodos de outra. <code>ContaPoupanca</code> pode herdar de <code>ContaBancaria</code>.</li>
+<li><strong>Polimorfismo:</strong> o mesmo método se comporta de modo diferente conforme o objeto.</li>
+<li><strong>Abstração:</strong> representar só as características relevantes do problema.</li>
+</ul>
+<div class="tip"><b>Como estudar</b>Resolva pequenos exercícios todos os dias e publique no GitHub. Programação se aprende praticando.</div>`}
+]},
+
+{ id:"livro-7", h:285, mark:"IA", title:"Inteligência Artificial e Chatbots", sub:"O que a IA faz de verdade, como chatbots funcionam e quais são seus limites.",
+chapters:[
+{t:"O que é inteligência artificial", h:`
+<p>IA é o campo da computação que cria sistemas capazes de executar tarefas que normalmente exigem inteligência humana, como reconhecer imagens, entender textos, traduzir e recomendar conteúdo.</p>
+<p>A <strong>aprendizagem de máquina</strong> (machine learning) é a técnica mais usada hoje: em vez de programar regras manualmente, o sistema aprende padrões a partir de exemplos.</p>`},
+{t:"Como as máquinas aprendem", h:`
+<ul>
+<li><strong>Aprendizado supervisionado:</strong> o modelo recebe exemplos já rotulados, como e-mails marcados "spam" ou "não spam", e aprende a classificar novos casos.</li>
+<li><strong>Aprendizado não supervisionado:</strong> o modelo encontra grupos nos dados sem rótulos, como segmentos de clientes.</li>
+<li><strong>Aprendizado por reforço:</strong> o sistema aprende por tentativa e erro, recebendo recompensas.</li>
+</ul>
+<p>A qualidade dos dados de treino define a qualidade do modelo. Dados ruins ou enviesados geram resultados ruins ou injustos.</p>`},
+{t:"Modelos de linguagem", h:`
+<p>Os grandes modelos de linguagem (LLMs) são treinados com enormes quantidades de texto e conseguem gerar respostas, resumir, traduzir e escrever código. Eles trabalham prevendo a continuação mais adequada de um texto, o que os torna muito flexíveis, mas também sujeitos a errar com confiança.</p>
+<div class="tip"><b>Use com senso crítico</b>Confira fatos importantes em fontes confiáveis. Um texto bem escrito pode conter informações erradas.</div>`},
+{t:"Chatbots: regras ou IA", h:`
+<p>Existem dois tipos principais:</p>
+<ul>
+<li><strong>Baseado em regras:</strong> segue um fluxo definido, com menus e palavras-chave. É previsível e barato, mas só responde ao que foi previsto.</li>
+<li><strong>Baseado em IA:</strong> interpreta a frase do usuário em linguagem natural e gera ou escolhe a resposta. É mais flexível, mas exige testes e limites bem definidos.</li>
+</ul>
+<p>Muitos sistemas reais combinam os dois: IA para entender a pergunta e regras para as ações que não podem falhar, como cancelar um pedido.</p>`},
+{t:"Como se constrói um chatbot", h:`
+<ol>
+<li><strong>Definir o objetivo:</strong> que problema ele resolve? Atendimento, dúvidas frequentes, agendamentos?</li>
+<li><strong>Mapear as intenções:</strong> o que o usuário quer dizer ("consultar pedido", "falar com atendente").</li>
+<li><strong>Escrever as respostas e fluxos</strong>, incluindo o que fazer quando não entender.</li>
+<li><strong>Integrar a canais</strong> como site, WhatsApp ou aplicativo, e a sistemas como banco de dados.</li>
+<li><strong>Testar com pessoas reais</strong> e melhorar a partir das conversas.</li>
+</ol>
+<p>Um bom chatbot sabe quando passar a conversa para um atendente humano.</p>`},
+{t:"Limites e ética", h:`
+<ul>
+<li><strong>Viés:</strong> o modelo reproduz distorções presentes nos dados de treino.</li>
+<li><strong>Privacidade:</strong> não envie dados pessoais ou sigilosos a ferramentas sem saber como são tratados.</li>
+<li><strong>Transparência:</strong> o usuário deve saber que conversa com uma máquina.</li>
+<li><strong>Responsabilidade:</strong> decisões importantes precisam de supervisão humana.</li>
+<li><strong>Trabalho:</strong> a IA automatiza tarefas, e o profissional precisa aprender a usá-la como ferramenta.</li>
+</ul>`}
+]},
+
+{ id:"livro-8", h:140, mark:"CAR", title:"Carreira em Tecnologia da Informação", sub:"Áreas de atuação, primeiros passos e como se preparar para o mercado.",
+chapters:[
+{t:"Áreas de atuação", h:`
+<ul>
+<li><strong>Desenvolvimento:</strong> cria sites, aplicativos e sistemas (front-end, back-end, mobile).</li>
+<li><strong>Suporte e infraestrutura:</strong> mantém computadores, redes e servidores funcionando.</li>
+<li><strong>Análise de sistemas:</strong> conversa com o negócio e traduz necessidades em requisitos.</li>
+<li><strong>Dados:</strong> análise, engenharia e ciência de dados.</li>
+<li><strong>Segurança da informação:</strong> protege sistemas e dados.</li>
+<li><strong>Qualidade (QA):</strong> testa e garante que o software funcione.</li>
+<li><strong>Gestão de projetos e produtos:</strong> organiza equipes, prazos e prioridades.</li>
+</ul>`},
+{t:"Estágio e primeira vaga", h:`
+<p>O estágio é a ponte entre a faculdade e o mercado. Procure oportunidades em sites de vagas, no LinkedIn, em programas de estágio de empresas e na rede de contatos da faculdade.</p>
+<p>Na primeira oportunidade, o mais importante é aprender: peça feedback, pergunte quando tiver dúvida e anote o que vai aprendendo. Vagas de suporte e de analista júnior também são ótimos pontos de partida.</p>`},
+{t:"Portfólio e GitHub", h:`
+<p>Quem está começando prova o que sabe mostrando projetos. Um bom portfólio tem poucos projetos bem explicados, não muitos incompletos.</p>
+<ul>
+<li>Crie um repositório por projeto, com um README que explique o objetivo, as tecnologias e como rodar.</li>
+<li>Faça commits frequentes e com mensagens claras.</li>
+<li>Inclua projetos que resolvam problemas reais, como um sistema de cadastro, um site ou um pequeno chatbot.</li>
+</ul>`},
+{t:"Currículo e LinkedIn", h:`
+<ul>
+<li>Currículo de uma página, objetivo claro e foco em formação, projetos, cursos e habilidades técnicas.</li>
+<li>Descreva o que você fez e o resultado, e não apenas o nome do cargo.</li>
+<li>No LinkedIn, mantenha foto profissional, resumo curto e as habilidades atualizadas.</li>
+<li>Revise a ortografia e use um e-mail de aparência profissional.</li>
+</ul>`},
+{t:"Habilidades além do código", h:`
+<ul>
+<li><strong>Comunicação:</strong> explicar um problema técnico para quem não é da área.</li>
+<li><strong>Trabalho em equipe:</strong> quase todo software é feito em grupo.</li>
+<li><strong>Organização e gestão do tempo.</strong></li>
+<li><strong>Resolução de problemas:</strong> dividir um problema grande em partes pequenas.</li>
+<li><strong>Inglês:</strong> a documentação e a maior parte do conteúdo técnico estão em inglês. Ler bem já abre muitas portas.</li>
+</ul>`},
+{t:"Aprender sempre", h:`
+<p>A tecnologia muda rápido. Defina um hábito de estudo, mesmo que sejam 30 minutos por dia. Cursos gratuitos de instituições como a Fundação Bradesco, documentações oficiais e comunidades de desenvolvedores ajudam bastante. Certificações de fornecedores, como as de nuvem e redes, podem complementar a formação quando fizerem sentido para a área escolhida.</p>
+<div class="tip"><b>Dica final</b>Escolha uma área para aprofundar, mas continue curioso sobre as outras. A carreira em TI tem muitos caminhos, e é comum mudar de um para outro ao longo do tempo.</div>`}
+]},
+{ id:"livro-9", h:14, mark:"!", title:"Phishing e Golpes com IA", sub:"Voz clonada, vídeo falso e mensagem perfeita: como reconhecer as armadilhas e o que fazer se cair em uma.",
+chapters:[
+{t:"O que é phishing", h:`
+<p>Phishing é quando um golpista se passa por alguém de confiança, como o seu banco, uma loja, os Correios ou até um parente, para fazer você entregar senhas, códigos ou dinheiro. O nome vem de <em>fishing</em>, "pescaria" em inglês: o golpista joga a isca e espera alguém morder.</p>
+<p>Ele funciona porque não ataca o computador, e sim a pessoa. Usa medo ("sua conta foi bloqueada"), pressa ("você tem 10 minutos"), curiosidade ("veja quem visitou seu perfil") ou vontade de ganhar algo ("você foi sorteado"). Quando estamos assustados ou com pressa, pensamos menos, e é nisso que o golpista aposta.</p>
+<p>A isca pode chegar por e-mail, SMS, WhatsApp, redes sociais, ligação ou até por um QR code.</p>`},
+{t:"Como a inteligência artificial mudou os golpes", h:`
+<p>Antes, muitas mensagens falsas se entregavam por erros de português, logotipos borrados e textos estranhos. Hoje, ferramentas de IA ajudam os golpistas a produzir:</p>
+<ul>
+<li><strong>Mensagens perfeitas:</strong> sem erros, com tom natural e, às vezes, personalizadas com o seu nome e informações públicas das suas redes sociais.</li>
+<li><strong>Voz clonada:</strong> com poucos segundos de um áudio seu, tirado de um vídeo ou de um recado no WhatsApp, é possível imitar a sua voz. O golpe clássico é alguém ligar com a voz de um filho ou neto, pedindo dinheiro com urgência.</li>
+<li><strong>Vídeos falsos (deepfakes):</strong> o rosto e a voz de famosos, jornalistas ou pessoas conhecidas dizendo o que nunca disseram, muito usados em propagandas de falsos investimentos.</li>
+<li><strong>Perfis e atendentes falsos:</strong> contas com foto e histórico inventados e robôs que conversam por horas, sem se cansar, até convencer a vítima.</li>
+<li><strong>Sites e anúncios idênticos aos originais:</strong> criados em poucos minutos.</li>
+</ul>
+<div class="tip"><b>Atenção</b>"Parece de verdade" deixou de ser prova de que é de verdade. Com IA, uma voz, um vídeo ou uma foto podem ser falsos e ainda assim muito convincentes.</div>`},
+{t:"Os golpes mais comuns", h:`
+<ul>
+<li><strong>"Oi, mãe, mudei de número":</strong> alguém se passa por um filho ou parente em um número novo e, depois de uma conversa curta, pede um Pix para pagar uma conta urgente.</li>
+<li><strong>Falsa central do banco:</strong> ligação ou mensagem avisando de uma compra suspeita e pedindo para você "confirmar" dados, instalar um aplicativo ou transferir o dinheiro para uma conta "segura". O banco de verdade nunca pede isso.</li>
+<li><strong>Parente em apuros com voz clonada:</strong> ligação com a voz de alguém querido dizendo que sofreu um acidente ou foi preso e precisa de dinheiro.</li>
+<li><strong>Falsa taxa de entrega:</strong> mensagem dizendo que uma encomenda está parada e pedindo o pagamento de uma taxa pequena por um link. O valor baixo é só para capturar os dados do seu cartão.</li>
+<li><strong>Falso investimento:</strong> promessa de lucro alto e garantido, muitas vezes com um vídeo falso de alguém famoso.</li>
+<li><strong>Falsa vaga de emprego:</strong> trabalho remoto fácil, que pede dinheiro ou documentos antes de qualquer entrevista.</li>
+<li><strong>Prêmios, sorteios e "recadastro":</strong> links que prometem benefícios e pedem seus dados pessoais.</li>
+<li><strong>QR code falso:</strong> adesivo colado sobre um QR code verdadeiro, que leva a uma página falsa.</li>
+<li><strong>Clonagem de WhatsApp:</strong> o golpista consegue o código de verificação da sua conta, assume o seu perfil e pede dinheiro aos seus contatos.</li>
+</ul>`},
+{t:"Sinais de alerta", h:`
+<p>Nenhum sinal sozinho prova um golpe, mas quando aparecem juntos, é hora de parar e desconfiar:</p>
+<ul>
+<li><strong>Urgência e ameaça:</strong> "sua conta será bloqueada agora", "responda em 10 minutos".</li>
+<li><strong>Pedido de dinheiro, Pix, vale-presente ou transferência</strong> feito por alguém que você não consegue confirmar.</li>
+<li><strong>Pedido de código</strong> recebido por SMS ou aplicativo. Esse código é a chave da sua conta e não deve ser passado a ninguém.</li>
+<li><strong>Link estranho:</strong> endereço encurtado ou com pequenas diferenças do original, como letras trocadas ou palavras extras ("banco-seguro-atendimento").</li>
+<li><strong>Número desconhecido</strong> dizendo ser alguém que você conhece.</li>
+<li><strong>Promessa de ganho garantido</strong> ou de algo bom demais para ser verdade.</li>
+<li><strong>Pedido de segredo:</strong> "não conte para ninguém" ou "não desligue o telefone".</li>
+<li><strong>Vídeo ou áudio com detalhes esquisitos:</strong> boca fora de sincronia, piscar estranho, voz sem emoção ou qualidade ruim de propósito.</li>
+</ul>
+<div class="tip"><b>Não dependa só de "achar defeito"</b>Os vídeos e áudios falsos melhoram a cada mês. Em vez de tentar adivinhar, confirme a informação por outro caminho.</div>`},
+{t:"Como se proteger", h:`
+<p>A regra de ouro cabe em três palavras: <strong>pare, respire e confirme</strong>. O golpe tem pressa, mas você não precisa ter.</p>
+<ul>
+<li><strong>Desligue e ligue de volta.</strong> Se alguém disser que é do banco, encerre a ligação e telefone para o número que está no verso do cartão ou no aplicativo oficial. Se puder, use outro aparelho.</li>
+<li><strong>Combine uma palavra-código com a família.</strong> Uma palavra que só vocês conhecem, usada para confirmar pedidos de dinheiro em emergências. Ela derrota a voz clonada.</li>
+<li><strong>Confirme por outro caminho.</strong> Pediram dinheiro em nome de um parente? Ligue para o número antigo dele ou pergunte a outra pessoa da família.</li>
+<li><strong>Nunca passe códigos, senhas ou dados do cartão</strong> para quem entrou em contato com você.</li>
+<li><strong>Ative a verificação em duas etapas</strong> no WhatsApp, e-mail, redes sociais e banco.</li>
+<li><strong>Não clique em links inesperados.</strong> Digite o endereço do site ou use o aplicativo oficial.</li>
+<li><strong>Instale aplicativos só das lojas oficiais</strong> e nunca instale programas de acesso remoto a pedido de terceiros.</li>
+<li><strong>Configure limites de Pix e transferências</strong> no aplicativo do banco, principalmente para o período da noite.</li>
+<li><strong>Cuide do que você publica.</strong> Perfis privados e menos áudios e vídeos públicos dificultam a clonagem da sua voz e da sua imagem.</li>
+<li><strong>Mantenha o celular e os aplicativos atualizados.</strong></li>
+</ul>`},
+{t:"Caí em um golpe. E agora?", h:`
+<p>Acontece com muita gente, inclusive com quem entende de tecnologia. Não é motivo de vergonha, e quanto mais rápido você agir, maiores as chances de reduzir o prejuízo.</p>
+<ol>
+<li><strong>Ligue para o banco agora</strong>, pelos canais oficiais, e conte o que aconteceu. Peça o bloqueio de cartões e contas e a contestação da operação. Nos casos de fraude com Pix, os bancos têm um mecanismo para tentar recuperar o dinheiro, e a rapidez faz diferença.</li>
+<li><strong>Troque as senhas</strong> das contas envolvidas, começando pelo e-mail e pelo banco, e ative a verificação em duas etapas.</li>
+<li><strong>Desinstale qualquer aplicativo</strong> que o golpista tenha pedido para você baixar e procure ajuda técnica.</li>
+<li><strong>Registre um boletim de ocorrência</strong> na delegacia ou na delegacia virtual do seu estado. Guarde prints de conversas, comprovantes, números e links.</li>
+<li><strong>Avise seus contatos</strong> se o seu WhatsApp ou a sua rede social foi clonado.</li>
+<li><strong>Denuncie</strong> o perfil, a mensagem ou o anúncio na própria plataforma.</li>
+</ol>
+<div class="tip"><b>Cuidado com o golpe do golpe</b>Depois de uma fraude, aparecem falsos "recuperadores de dinheiro" que cobram adiantado para devolver o que foi perdido. Ninguém sério cobra antes de resolver.</div>`},
+{t:"Proteja quem você ama", h:`
+<p>Golpistas escolhem quem tem menos contato com a tecnologia ou mais confiança nos outros. Pessoas idosas são alvos frequentes, mas jovens também caem, principalmente em golpes de falso emprego, prêmios e jogos.</p>
+<ul>
+<li><strong>Converse sem julgamento.</strong> Quem tem medo de levar bronca demora a pedir ajuda.</li>
+<li><strong>Combine em casa</strong> a palavra-código e a regra "dinheiro só depois de confirmar por ligação".</li>
+<li><strong>Ajude a configurar</strong> o limite de Pix, a verificação em duas etapas e a privacidade dos perfis dos seus familiares.</li>
+<li><strong>Repita o essencial:</strong> se pedem pressa, segredo ou código, é sinal de golpe.</li>
+<li><strong>Compartilhe este ebook.</strong> Um alerta enviado hoje pode evitar um prejuízo amanhã.</li>
+</ul>
+<p><button class="btn primary" data-copy="1">Copiar link deste ebook</button></p>`}
+]}
+];
+
+var ICONS = {
+  "livro-1":'<circle cx="24" cy="10" r="5"/><circle cx="10" cy="36" r="5"/><circle cx="38" cy="36" r="5"/><path d="M21.5 14.5 12.5 31.5M26.5 14.5l9 17M15 36h18"/>',
+  "livro-2":'<ellipse cx="24" cy="12" rx="14" ry="6"/><path d="M10 12v24c0 3.3 6.3 6 14 6s14-2.7 14-6V12"/><path d="M10 24c0 3.3 6.3 6 14 6s14-2.7 14-6"/>',
+  "livro-3":'<path d="M17 14 7 24l10 10M31 14l10 10-10 10M27 10l-6 28"/>',
+  "livro-4":'<circle cx="24" cy="24" r="17"/><ellipse cx="24" cy="24" rx="7" ry="17"/><path d="M7 24h34M10 14h28M10 34h28"/>',
+  "livro-5":'<path d="M24 6 9 12v11c0 9 6 16 15 19 9-3 15-10 15-19V12z"/><path d="m17 24 5 5 9-10"/>',
+  "livro-6":'<rect x="7" y="25" width="15" height="15" rx="2"/><rect x="26" y="25" width="15" height="15" rx="2"/><rect x="16.5" y="8" width="15" height="15" rx="2"/>',
+  "livro-7":'<path d="M8 10h26a3 3 0 0 1 3 3v15a3 3 0 0 1-3 3H21l-8 7v-7H8a3 3 0 0 1-3-3V13a3 3 0 0 1 3-3z"/><circle cx="14" cy="20.5" r="1.6" fill="currentColor"/><circle cx="21" cy="20.5" r="1.6" fill="currentColor"/><circle cx="28" cy="20.5" r="1.6" fill="currentColor"/><path d="M40 4v8M36 8h8"/>',
+  "livro-8":'<path d="M5 42h9v-8h9v-8h9v-8h11"/><path d="M37 18V6l8 3.5L37 13"/>',
+  "livro-9":'<path d="M24 6 3 42h42z"/><path d="M24 20v10"/><circle cx="24" cy="35.5" r="1.4" fill="currentColor"/>'
+};
+var WHO = {
+  "livro-1":"Para quem quer entender, sem complicação, como a tecnologia ajuda empresas e pessoas.",
+  "livro-2":"Para quem já ouviu falar de banco de dados e quer saber como ele funciona por trás de qualquer sistema.",
+  "livro-3":"Para quem tem curiosidade de saber como um aplicativo ou site sai da ideia e chega ao celular.",
+  "livro-4":"Para quem usa a internet todo dia e nunca soube como ela chega até o aparelho.",
+  "livro-5":"Para qualquer pessoa que tenha celular, e-mail ou conta em banco.",
+  "livro-6":"Para quem está começando a programar e quer uma base clara em Java.",
+  "livro-7":"Para quem usa ou vai usar assistentes e chatbots e quer entender o que existe por trás deles.",
+  "livro-8":"Para estudantes e iniciantes que querem entrar na área de tecnologia.",
+  "livro-9":"Para todas as pessoas, em especial para quem tem pais, avós ou filhos usando celular."
+};
+var NUMS = ["Zero","Um","Dois","Três","Quatro","Cinco","Seis","Sete","Oito","Nove","Dez"];
+var PEOPLE = [
+  {i:"AF", n:"Agatha Fonseca", r:"Aluna de Sistemas de Informação", c:"#FF8FA8"},
+  {i:"MV", n:"Marcos Vinicius", r:"Aluno de Sistemas de Informação", c:"#FFC83D"},
+  {i:"IC", n:"Isabella Cavalcante", r:"Aluna de Sistemas de Informação", c:"#2FC7A0"}
+];
+var CREDIT_TXT = "Agatha Fonseca, Marcos Vinicius e Isabella Cavalcante";
+
+var app = document.getElementById("app");
+var prog = document.getElementById("prog");
+
+function ico(id, size){
+  return '<svg viewBox="0 0 48 48" width="'+size+'" height="'+size+'" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">'+ICONS[id]+'</svg>';
+}
+function strip(h){ return h.replace(/<[^>]+>/g," ").replace(/&[a-z]+;/g," "); }
+function words(b){ var n=0; b.chapters.forEach(function(c){ n += strip(c.h).split(/\s+/).filter(Boolean).length; }); return n; }
+function mins(b){ return Math.max(1, Math.round(words(b)/190)); }
+function byId(id){ return BOOKS.find(function(b){ return b.id === id; }); }
+
+function library(){
+  var alertBook = byId("livro-9");
+  var others = BOOKS.filter(function(b){ return b.id !== "livro-9"; });
+  var cards = others.map(function(b){
+    var n = BOOKS.indexOf(b) + 1;
+    return '<li><button class="card" data-open="'+b.id+'" aria-label="Abrir o ebook '+b.title+'">'
+      + '<span class="cv" style="--h:'+b.h+'">'+ico(b.id,60)+'<em>Ebook '+n+'</em></span>'
+      + '<span class="cb"><span class="ct">'+b.title+'</span><span class="cs">'+b.sub+'</span>'
+      + '<span class="cm"><span>'+mins(b)+' min de leitura</span><span class="arr">Ler →</span></span></span></button></li>';
+  }).join("");
+  var avs = PEOPLE.map(function(p){ return '<i style="--c:'+p.c+'">'+p.i+'</i>'; }).join("");
+  var people = PEOPLE.map(function(p){
+    return '<div class="person"><span class="av" style="--c:'+p.c+'">'+p.i+'</span><span class="pn"><strong>'+p.n+'</strong><span>'+p.r+'</span></span></div>';
+  }).join("");
+  app.innerHTML =
+    '<section class="hero">'
+    + '<span class="blob b1"></span><span class="blob b2"></span><span class="blob b3"></span>'
+    + '<div class="hero-text">'
+    + '<p class="eyebrow">Projeto comunitário · Sistemas de Informação</p>'
+    + '<h1>Informação boa é para <mark>todo mundo.</mark></h1>'
+    + '<p class="lead">'+NUMS[BOOKS.length]+' ebooks gratuitos, em linguagem simples, para entender a tecnologia e se proteger na internet. Escritos por alunos de Sistemas de Informação para levar conhecimento à comunidade.</p>'
+    + '<div class="cta"><button class="btn primary" data-scroll="shelf">Começar a ler</button><button class="btn ghost" data-open="livro-9">Alerta sobre golpes</button></div>'
+    + '<div class="by"><span class="avs">'+avs+'</span><span>Um trabalho de '+CREDIT_TXT+'</span></div>'
+    + '</div>'
+    + '<div class="art" aria-hidden="true">'
+    + '<span class="mini m1" style="--h:165">'+ico("livro-2",50)+'</span>'
+    + '<span class="mini m2" style="--h:14">'+ico("livro-9",54)+'</span>'
+    + '<span class="mini m3" style="--h:265">'+ico("livro-7",50)+'</span>'
+    + '</div></section>'
+    + '<button class="alert" data-open="livro-9">'
+    + '<span class="al-ic">'+ico("livro-9",36)+'</span>'
+    + '<span><span class="al-tag">Alerta para todos</span><span class="al-t">'+alertBook.title+'</span><span class="al-s">Voz clonada, vídeo falso e mensagem perfeita. Aprenda a reconhecer os golpes e o que fazer se alguém da sua família cair em um.</span></span>'
+    + '<span class="btn primary">Ler o ebook</span></button>'
+    + '<h2 class="sec" id="shelf">Escolha por onde começar</h2>'
+    + '<p class="sec-sub">Leia na ordem ou vá direto ao assunto que mais te interessa. Cada ebook tem leitura de poucos minutos e dá para fazer no celular.</p>'
+    + '<ul class="shelf">'+cards+'</ul>'
+    + '<section class="about"><div><p class="eyebrow">Quem fez</p><h2>Feito por alunos, para a comunidade</h2>'
+    + '<p>Este site é um trabalho comunitário dos alunos de Sistemas de Informação '+CREDIT_TXT+'.</p>'
+    + '<p>A ideia é simples: levar informação clara, gratuita e sem termos difíceis para quem não é da área de tecnologia, e ajudar as pessoas a usar a internet com mais segurança.</p></div>'
+    + '<div class="people">'+people+'</div></section>'
+    + '<footer class="foot"><p>Material educativo e introdutório. Se tiver dúvida sobre o seu dinheiro ou a sua conta, procure o seu banco pelos canais oficiais.</p>'
+    + '<button class="btn" data-copy="1">Copiar link do site</button></footer>';
+  document.title = "Biblioteca SI";
+  prog.style.width = "0";
+}
+
+function reader(i){
+  var b = BOOKS[i];
+  var toc = b.chapters.map(function(c,k){
+    return '<li><button data-ch="'+k+'" '+(k===0?'aria-current="true"':'')+'>'+c.t+'</button></li>';
+  }).join("");
+  var body = b.chapters.map(function(c,k){
+    return '<section id="cap'+k+'"><p class="capn">Capítulo '+(k+1)+'</p><h2>'+c.t+'</h2>'+c.h+'</section>';
+  }).join("");
+  var prev = BOOKS[i-1], next = BOOKS[i+1];
+  var pager = '<nav class="pager" aria-label="Outros ebooks">'
+    + (prev ? '<button data-open="'+prev.id+'"><small>← Anterior</small>'+prev.title+'</button>' : '<button class="none" tabindex="-1" aria-hidden="true"></button>')
+    + (next ? '<button data-open="'+next.id+'"><small>Próximo →</small>'+next.title+'</button>' : '<button class="none" tabindex="-1" aria-hidden="true"></button>')
+    + '</nav>';
+  app.innerHTML =
+    '<div class="rhead"><button class="back" data-home="1">← Biblioteca</button><span class="eyebrow">Ebook '+(i+1)+' de '+BOOKS.length+'</span></div>'
+    + '<header class="rhero" style="--h:'+b.h+'"><div class="rh-text">'
+    + '<div class="chips"><span class="chip">'+b.chapters.length+' capítulos</span><span class="chip">'+mins(b)+' min de leitura</span></div>'
+    + '<h1>'+b.title+'</h1><p class="lead">'+b.sub+'</p>'
+    + '<p class="who"><strong>Para quem é:</strong> '+WHO[b.id]+'</p></div>'
+    + '<span class="rh-ic">'+ico(b.id,60)+'</span></header>'
+    + '<div class="reader"><details class="toc" id="toc"><summary>Neste ebook</summary><ol>'+toc+'</ol></details>'
+    + '<article class="text">'+body+pager
+    + '<p class="credit">Ebook produzido como <b>trabalho comunitário</b> dos alunos de Sistemas de Informação <b>'+CREDIT_TXT+'</b>, para levar informação ao público.</p>'
+    + '</article></div>';
+  document.title = b.title + " | Biblioteca SI";
+  var t = document.getElementById("toc");
+  if (window.matchMedia("(min-width:861px)").matches) { t.open = true; t.querySelector("summary").style.pointerEvents = "none"; }
+  onScroll();
+}
+
+function route(){
+  var h = (location.hash || "").replace("#","");
+  var i = BOOKS.findIndex(function(b){ return b.id === h; });
+  if (i < 0) library(); else reader(i);
+  window.scrollTo(0,0);
+}
+
+function onScroll(){
+  var d = document.documentElement;
+  var max = d.scrollHeight - window.innerHeight;
+  prog.style.width = (document.getElementById("toc") && max > 0) ? Math.min(100, (window.scrollY / max) * 100) + "%" : "0";
+  var secs = document.querySelectorAll(".text section");
+  if (!secs.length) return;
+  var cur = 0;
+  secs.forEach(function(s,k){ if (s.getBoundingClientRect().top < window.innerHeight * 0.35) cur = k; });
+  document.querySelectorAll(".toc button").forEach(function(btn,k){
+    if (k === cur) btn.setAttribute("aria-current","true"); else btn.removeAttribute("aria-current");
+  });
+}
+
+app.addEventListener("click", function(e){
+  var o = e.target.closest("[data-open]");
+  if (o) { location.hash = o.getAttribute("data-open"); return; }
+  if (e.target.closest("[data-home]")) { location.hash = ""; return; }
+  var sc = e.target.closest("[data-scroll]");
+  if (sc) { var el = document.getElementById(sc.getAttribute("data-scroll")); if (el) el.scrollIntoView({block:"start"}); return; }
+  var c = e.target.closest("[data-ch]");
+  if (c) { var s = document.getElementById("cap" + c.getAttribute("data-ch")); if (s) s.scrollIntoView({block:"start"}); return; }
+  var cp = e.target.closest("[data-copy]");
+  if (cp) {
+    var url = location.href, label = cp.textContent;
+    var done = function(){ cp.textContent = "Link copiado!"; setTimeout(function(){ cp.textContent = label; }, 2200); };
+    var fail = function(){ cp.textContent = "Copie pela barra de endereço"; setTimeout(function(){ cp.textContent = label; }, 2600); };
+    try { navigator.clipboard.writeText(url).then(done, fail); } catch(err){ fail(); }
+  }
+});
+window.addEventListener("hashchange", route);
+window.addEventListener("scroll", onScroll, {passive:true});
+route();
+</script>
+</body>
+</html>
